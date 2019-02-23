@@ -1,35 +1,37 @@
-`use strict`;
+"use strict";
+
+// strict mode
 
 (() => {
   const FILTER_DATA = [{
-      name: `All`,
-      amount: 15,
-      isChecked: true
-    },
-    {
-      name: `Overdue`,
-      amount: 0,
-    },
-    {
-      name: `Today`,
-      amount: 0,
-    },
-    {
-      name: `Favorites`,
-      amount: 7,
-    },
-    {
-      name: `Repeating`,
-      amount: 2,
-    },
-    {
-      name: `Tags`,
-      amount: 6,
-    },
-    {
-      name: `Arhive`,
-      amount: 115,
-    },
+    name: `All`,
+    amount: 15,
+    isChecked: true
+  },
+  {
+    name: `Overdue`,
+    amount: 0,
+  },
+  {
+    name: `Today`,
+    amount: 0,
+  },
+  {
+    name: `Favorites`,
+    amount: 7,
+  },
+  {
+    name: `Repeating`,
+    amount: 2,
+  },
+  {
+    name: `Tags`,
+    amount: 6,
+  },
+  {
+    name: `Arhive`,
+    amount: 115,
+  },
   ];
 
   const CARD_DATA = {
@@ -37,7 +39,7 @@
     MAX: 7,
     COLLOR_CLASS: [`black`, `yellow`, `blue`, `green`, `pink`],
     TYPE: [`repeat`, `deadline`, ``],
-  }
+  };
 
   const FILTER_BLOCK = document.querySelector(`.main__filter`);
   const CARD_LIST = document.querySelector(`.board__tasks`);
@@ -46,19 +48,23 @@
    * Возвращает случайное значение в заданном диапазоне от:
    * @param {number} min - минимальное значение в диапазоне
    * @param {number} max - максимальное значение в диапазоне
+   * @return {num}
    */
   const getRandomNumber = (min, max) => Math.floor(Math.random() * (max + 1 - min) + min);
 
   /**
    * Возвращает случайный элемент массива
    * @param {Array} arr - массив из которго его хотим получить
+   * @return {num}
    */
   const getRandomValue = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
   /**
    * Очищает дом элемент
    * @param {str} section - DOM нода
+   * @return {result}
    */
+  // eslint-disable-next-line no-return-assign
   const clearSection = (section) => section.innerHTML = ``;
 
   /**
@@ -66,11 +72,12 @@
    * @param {string} caption - название фильтра
    * @param {number} amount - количество задач
    * @param {boolean} isChecked - выбран ли фильтр
+   * @return {str}
    */
   const createFilter = (caption, amount, isChecked = false) => {
     return `<input type="radio" id="filter__${caption.toLowerCase()}" class="filter__input visually-hidden" name="filter" ${isChecked ? ` checked` : ``} ${amount === 0 ? ` disabled` : ``}>
-            <label for="filter__${caption.toLowerCase()}" class="filter__label">${caption.toUpperCase()} <span class="filter__${caption.toLowerCase()}-count">${amount}</span></label>`
-  }
+            <label for="filter__${caption.toLowerCase()}" class="filter__label">${caption.toUpperCase()} <span class="filter__${caption.toLowerCase()}-count">${amount}</span></label>`;
+  };
 
   /**
    * Заполняет ноду фильтрами
@@ -78,8 +85,8 @@
    * @param {string} section - DOM нода
    */
   const getFillCard = (data, section) => {
-    data.forEach(item => section.insertAdjacentHTML(`beforeend`, createFilter(item.name, item.amount, item.isChecked)))
-  }
+    data.forEach((item) => section.insertAdjacentHTML(`beforeend`, createFilter(item.name, item.amount, item.isChecked)));
+  };
 
   const createCard = () => {
     return `<article class="card card--${getRandomValue(CARD_DATA.TYPE)} card--${getRandomValue(CARD_DATA.COLLOR_CLASS)}">
@@ -328,28 +335,28 @@
           </div>
         </div>
       </form>
-    </article>`
-  }
+    </article>`;
+  };
 
   /**
    * Отрисовывает заданное количество карточек
    * @param {number} num - число карточек которое нужно отрисовать
    */
-  const createSpecifiedNumCard = num => {
+  const createSpecifiedNumCard = (num) => {
     for (let i = 0; i < num; i++) {
-      CARD_LIST.insertAdjacentHTML(`beforeend`, createCard())
+      CARD_LIST.insertAdjacentHTML(`beforeend`, createCard());
     }
-  }
+  };
 
-  FILTER_BLOCK.addEventListener(`change`, e => {
+  FILTER_BLOCK.addEventListener(`change`, (e) => {
     if (e.target.tagName.toLowerCase() === `input`) {
       clearSection(CARD_LIST);
-      createSpecifiedNumCard(getRandomNumber(CARD_DATA.MIN, CARD_DATA.MAX))
+      createSpecifiedNumCard(getRandomNumber(CARD_DATA.MIN, CARD_DATA.MAX));
     }
   });
 
   clearSection(CARD_LIST);
   clearSection(FILTER_BLOCK);
   getFillCard(FILTER_DATA, FILTER_BLOCK);
-  createSpecifiedNumCard(7)
-})()
+  createSpecifiedNumCard(CARD_DATA.MAX);
+})();
