@@ -57,7 +57,7 @@
    * @param {Array} arr - массив из которго его хотим получить
    * @return {num}
    */
-  const getRandomValue = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const getRandomArrayItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
   /**
    * Очищает дом элемент
@@ -75,8 +75,9 @@
    * @return {str}
    */
   const createFilter = (caption, amount, isChecked = false) => {
-    return `<input type="radio" id="filter__${caption.toLowerCase()}" class="filter__input visually-hidden" name="filter" ${isChecked ? ` checked` : ``} ${amount === 0 ? ` disabled` : ``}>
-            <label for="filter__${caption.toLowerCase()}" class="filter__label">${caption.toUpperCase()} <span class="filter__${caption.toLowerCase()}-count">${amount}</span></label>`;
+    const captionLowered = caption.toLowerCase();
+    return `<input type="radio" id="filter__${captionLowered}" class="filter__input visually-hidden" name="filter" ${isChecked ? ` checked` : ``} ${amount === 0 ? ` disabled` : ``}>
+            <label for="filter__${captionLowered}" class="filter__label">${caption.toUpperCase()} <span class="filter__${captionLowered}-count">${amount}</span></label>`;
   };
 
   /**
@@ -84,12 +85,12 @@
    * @param {Array} data - массив фильтров
    * @param {string} section - DOM нода
    */
-  const getFillCard = (data, section) => {
+  const fillCardWithFilters = (data, section) => {
     data.forEach((item) => section.insertAdjacentHTML(`beforeend`, createFilter(item.name, item.amount, item.isChecked)));
   };
 
   const createCard = () => {
-    return `<article class="card card--${getRandomValue(CARD_DATA.TYPE)} card--${getRandomValue(CARD_DATA.COLLOR_CLASS)}">
+    return `<article class="card card--${getRandomArrayItem(CARD_DATA.TYPE)} card--${getRandomArrayItem(CARD_DATA.COLLOR_CLASS)}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__control">
@@ -357,6 +358,6 @@
 
   clearSection(CARD_LIST);
   clearSection(FILTER_BLOCK);
-  getFillCard(FILTER_DATA, FILTER_BLOCK);
+  fillCardWithFilters(FILTER_DATA, FILTER_BLOCK);
   createSpecifiedNumCard(CARD_DATA.MAX);
 })();
