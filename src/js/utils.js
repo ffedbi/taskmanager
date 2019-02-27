@@ -18,5 +18,7 @@ export const getRandomArrayItem = (arr) => arr[Math.floor(Math.random() * arr.le
  * @param {str} section - DOM нода
  * @return {result}
  */
-// eslint-disable-next-line no-return-assign
-export const clearSection = (section) => section.innerHTML = ``;
+
+export const clearSection = (section) => {
+  section.innerHTML = ``;
+};
