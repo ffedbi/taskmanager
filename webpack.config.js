@@ -19,9 +19,9 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      filename: `../index.html`,
       template: `./src/index.html`,
     })],
-  watch: true,
   devtool: `source-map`,
   devServer: {
     contentBase: path.join(__dirname, `public`),
