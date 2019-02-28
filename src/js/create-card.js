@@ -1,96 +1,7 @@
-"use strict";
+import {getRandomArrayItem} from './utils';
 
-// strict mode
-
-(() => {
-  const FILTER_DATA = [{
-    name: `All`,
-    amount: 15,
-    isChecked: true
-  },
-  {
-    name: `Overdue`,
-    amount: 0,
-  },
-  {
-    name: `Today`,
-    amount: 0,
-  },
-  {
-    name: `Favorites`,
-    amount: 7,
-  },
-  {
-    name: `Repeating`,
-    amount: 2,
-  },
-  {
-    name: `Tags`,
-    amount: 6,
-  },
-  {
-    name: `Arhive`,
-    amount: 115,
-  },
-  ];
-
-  const CARD_DATA = {
-    MIN: 1,
-    MAX: 7,
-    COLLOR_CLASS: [`black`, `yellow`, `blue`, `green`, `pink`],
-    TYPE: [`repeat`, `deadline`, ``],
-  };
-
-  const FILTER_BLOCK = document.querySelector(`.main__filter`);
-  const CARD_LIST = document.querySelector(`.board__tasks`);
-
-  /**
-   * Возвращает случайное значение в заданном диапазоне от:
-   * @param {number} min - минимальное значение в диапазоне
-   * @param {number} max - максимальное значение в диапазоне
-   * @return {num}
-   */
-  const getRandomNumber = (min, max) => Math.floor(Math.random() * (max + 1 - min) + min);
-
-  /**
-   * Возвращает случайный элемент массива
-   * @param {Array} arr - массив из которго его хотим получить
-   * @return {num}
-   */
-  const getRandomArrayItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-  /**
-   * Очищает дом элемент
-   * @param {str} section - DOM нода
-   * @return {result}
-   */
-  // eslint-disable-next-line no-return-assign
-  const clearSection = (section) => section.innerHTML = ``;
-
-  /**
-   * Создаёт фильтр
-   * @param {string} caption - название фильтра
-   * @param {number} amount - количество задач
-   * @param {boolean} isChecked - выбран ли фильтр
-   * @return {str}
-   */
-  const createFilter = (caption, amount, isChecked = false) => {
-    const captionLowered = caption.toLowerCase();
-    return `<input type="radio" id="filter__${captionLowered}" class="filter__input visually-hidden" name="filter" ${isChecked ? ` checked` : ``} ${amount === 0 ? ` disabled` : ``}>
-            <label for="filter__${captionLowered}" class="filter__label">${caption.toUpperCase()} <span class="filter__${captionLowered}-count">${amount}</span></label>`;
-  };
-
-  /**
-   * Заполняет ноду фильтрами
-   * @param {Array} data - массив фильтров
-   * @param {string} section - DOM нода
-   */
-  const fillCardWithFilters = (data, section) => {
-    data.forEach((item) => section.insertAdjacentHTML(`beforeend`, createFilter(item.name, item.amount, item.isChecked)));
-  };
-
-  const createCard = () => {
-    return `<article class="card card--${getRandomArrayItem(CARD_DATA.TYPE)} card--${getRandomArrayItem(CARD_DATA.COLLOR_CLASS)}">
+export const createCard = (data) => {
+  return `<article class="card card--${getRandomArrayItem(data.TYPE)} card--${getRandomArrayItem(data.COLOR_CLASS)}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__control">
@@ -256,7 +167,7 @@
                 name="img"
               />
               <img
-                src="img/add-photo.svg"
+                src="../img/add-photo.svg"
                 alt="task picture"
                 class="card__img"
               />
@@ -337,27 +248,4 @@
         </div>
       </form>
     </article>`;
-  };
-
-  /**
-   * Отрисовывает заданное количество карточек
-   * @param {number} num - число карточек которое нужно отрисовать
-   */
-  const createSpecifiedNumCard = (num) => {
-    for (let i = 0; i < num; i++) {
-      CARD_LIST.insertAdjacentHTML(`beforeend`, createCard());
-    }
-  };
-
-  FILTER_BLOCK.addEventListener(`change`, (e) => {
-    if (e.target.tagName.toLowerCase() === `input`) {
-      clearSection(CARD_LIST);
-      createSpecifiedNumCard(getRandomNumber(CARD_DATA.MIN, CARD_DATA.MAX));
-    }
-  });
-
-  clearSection(CARD_LIST);
-  clearSection(FILTER_BLOCK);
-  fillCardWithFilters(FILTER_DATA, FILTER_BLOCK);
-  createSpecifiedNumCard(CARD_DATA.MAX);
-})();
+};
