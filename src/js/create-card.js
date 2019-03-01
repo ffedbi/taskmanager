@@ -1,7 +1,23 @@
-import {getRandomArrayItem} from './utils';
+const getStatusCard = (type) => `${type ? `card--${type}` : ``}`;
+
+const makeTagsBtn = (arr) => {
+  let str = ``;
+  for (let item of arr) {
+    str += `<span class="card__hashtag-inner">
+              <input type="hidden"
+                     name="hashtag"
+                     value="${item}"
+                     class="card__hashtag-hidden-input"
+              />
+              <button type="button" class="card__hashtag-name">#${item}</button>
+              <button type="button" class="card__hashtag-delete">delete</button>
+            </span>`;
+  }
+  return str;
+};
 
 export const createCard = (data) => {
-  return `<article class="card card--${getRandomArrayItem(data.TYPE)} card--${getRandomArrayItem(data.COLOR_CLASS)}">
+  return `<article class="card ${getStatusCard(data.type)} card--${data.color}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__control">
@@ -31,8 +47,7 @@ export const createCard = (data) => {
                 class="card__text"
                 placeholder="Start typing your text here..."
                 name="text"
-              >
-  This is example of new task, you can add picture, set date and time, add tags.</textarea
+              >${data.title}</textarea
               >
             </label>
           </div>
@@ -44,12 +59,12 @@ export const createCard = (data) => {
                   date: <span class="card__date-status">no</span>
                 </button>
 
-                <fieldset class="card__date-deadline" disabled>
+                <fieldset class="card__date-deadline" >
                   <label class="card__input-deadline-wrap">
                     <input
                       class="card__date"
                       type="text"
-                      placeholder="23 September"
+                      placeholder="${data.dueDate[0]}"
                       name="date"
                     />
                   </label>
@@ -57,7 +72,7 @@ export const createCard = (data) => {
                     <input
                       class="card__time"
                       type="text"
-                      placeholder="11:15 PM"
+                      placeholder="${data.dueDate[1]}"
                       name="time"
                     />
                   </label>
@@ -75,6 +90,7 @@ export const createCard = (data) => {
                       id="repeat-mo-1"
                       name="repeat"
                       value="mo"
+                      ${data.repeatingDays.Mo ? ` checked` : ``}
                     />
                     <label class="card__repeat-day" for="repeat-mo-1"
                       >mo</label
@@ -85,7 +101,7 @@ export const createCard = (data) => {
                       id="repeat-tu-1"
                       name="repeat"
                       value="tu"
-                      checked
+                      ${data.repeatingDays.Tu ? ` checked` : ``}
                     />
                     <label class="card__repeat-day" for="repeat-tu-1"
                       >tu</label
@@ -96,6 +112,7 @@ export const createCard = (data) => {
                       id="repeat-we-1"
                       name="repeat"
                       value="we"
+                      ${data.repeatingDays.We ? ` checked` : ``}
                     />
                     <label class="card__repeat-day" for="repeat-we-1"
                       >we</label
@@ -106,6 +123,7 @@ export const createCard = (data) => {
                       id="repeat-th-1"
                       name="repeat"
                       value="th"
+                      ${data.repeatingDays.Th ? ` checked` : ``}
                     />
                     <label class="card__repeat-day" for="repeat-th-1"
                       >th</label
@@ -116,7 +134,7 @@ export const createCard = (data) => {
                       id="repeat-fr-1"
                       name="repeat"
                       value="fr"
-                      checked
+                      ${data.repeatingDays.Fr ? ` checked` : ``}
                     />
                     <label class="card__repeat-day" for="repeat-fr-1"
                       >fr</label
@@ -127,6 +145,7 @@ export const createCard = (data) => {
                       name="repeat"
                       value="sa"
                       id="repeat-sa-1"
+                      ${data.repeatingDays.Sa ? ` checked` : ``}
                     />
                     <label class="card__repeat-day" for="repeat-sa-1"
                       >sa</label
@@ -137,7 +156,7 @@ export const createCard = (data) => {
                       id="repeat-su-1"
                       name="repeat"
                       value="su"
-                      checked
+                      ${data.repeatingDays.Su ? ` checked` : ``}
                     />
                     <label class="card__repeat-day" for="repeat-su-1"
                       >su</label
@@ -147,7 +166,7 @@ export const createCard = (data) => {
               </div>
 
               <div class="card__hashtag">
-                <div class="card__hashtag-list"></div>
+                <div class="card__hashtag-list">${makeTagsBtn(data.tags)}</div>
 
                 <label>
                   <input
@@ -160,14 +179,14 @@ export const createCard = (data) => {
               </div>
             </div>
 
-            <label class="card__img-wrap card__img-wrap--empty">
+            <label class="card__img-wrap ${data.picture ? `` : ` card__img-wrap--empty`}">
               <input
                 type="file"
                 class="card__img-input visually-hidden"
                 name="img"
               />
               <img
-                src="../img/add-photo.svg"
+                src="${data.picture ? data.picture : ``}"
                 alt="task picture"
                 class="card__img"
               />

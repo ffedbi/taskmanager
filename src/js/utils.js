@@ -1,3 +1,26 @@
+const monthNames = [
+  `January`,
+  `February`,
+  `March`,
+  `April`,
+  `May`,
+  `June`,
+  `July`,
+  `August`,
+  `September`,
+  `October`,
+  `November`,
+  `December`,
+];
+
+export const convertDate = () => {
+  let day = new Date().getDate();
+  let month = new Date().getMonth();
+  return `${day} ${monthNames[month]}`;
+};
+
+export const convertHours = () => new Date().toLocaleString(`en-US`, {hour: `numeric`, minute: `numeric`, hour12: true});
+
 /**
  * Возвращает случайное значение в заданном диапазоне от:
  * @param {number} min - минимальное значение в диапазоне
