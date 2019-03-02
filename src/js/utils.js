@@ -1,11 +1,10 @@
-const timeData = {
-  days: 7,
-  hourse: 24,
-  minute: 60,
-  seconds: 60,
-  ms: 1000,
-  optionsDate: {hour: `numeric`, minute: `numeric`, hour12: true}
+const OPTIONS_DATE = {
+  hour: `numeric`,
+  minute: `numeric`,
+  hour12: true
 };
+
+const DEVIATION_TIME = 7 * 24 * 60 * 60 * 1000;
 
 /**
  * Возвращает случайное значение в заданном диапазоне от:
@@ -32,13 +31,10 @@ export const clearSection = (section) => {
   section.innerHTML = ``;
 };
 
-const getDeviationTime = () => timeData.days * timeData.hourse * timeData.minute * timeData.seconds * timeData.ms;
-
 const createDateTask = () => {
-  const shift = getDeviationTime();
   const dateTask = Date.now();
-  const arrTimeSift = [dateTask + shift, dateTask - shift];
-  return getRandomArrayItem(arrTimeSift);
+  const arrTimeSift = [dateTask + DEVIATION_TIME, dateTask - DEVIATION_TIME];
+  return getRandomNumber(arrTimeSift[0], arrTimeSift[1]);
 };
 
 export const convertDate = () => {
@@ -46,6 +42,4 @@ export const convertDate = () => {
   return result.split(` `).reverse().join(` `);
 };
 
-export const convertHours = () => new Date(createDateTask()).toLocaleString(`en-US`, timeData.optionsDate);
-
-
+export const convertHours = () => new Date(createDateTask()).toLocaleString(`en-US`, OPTIONS_DATE);

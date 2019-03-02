@@ -1,8 +1,8 @@
 import {FILTER_DATA, TASK_DATA} from './data';
 import {clearSection, getRandomNumber} from './utils';
 import {createFilter} from './create-filter';
-import {createTask} from './create-task';
 import {createRandomTask} from './create-random-task';
+import {createRandomTaskData} from './create-random-task-data';
 
 const FILTER_BLOCK = document.querySelector(`.main__filter`);
 const CARD_BLOCK = document.querySelector(`.board__tasks`);
@@ -22,18 +22,18 @@ const fillCardWithFilters = (data, section) => {
  */
 const createSpecifiedNumCard = (num) => {
   for (let i = 0; i < num; i++) {
-    CARD_BLOCK.insertAdjacentHTML(`beforeend`, createTask(createRandomTask()));
+    CARD_BLOCK.insertAdjacentHTML(`beforeend`, createRandomTask(createRandomTaskData()));
   }
 };
 
 FILTER_BLOCK.addEventListener(`change`, (e) => {
   if (e.target.tagName.toLowerCase() === `input`) {
     clearSection(CARD_BLOCK);
-    createSpecifiedNumCard(getRandomNumber(TASK_DATA.MIN, TASK_DATA.MAX));
+    createSpecifiedNumCard(getRandomNumber(TASK_DATA.MIN_TASK_COUNT, TASK_DATA.MAX_TASK_COUNT));
   }
 });
 
 clearSection(CARD_BLOCK);
 clearSection(FILTER_BLOCK);
 fillCardWithFilters(FILTER_DATA, FILTER_BLOCK);
-createSpecifiedNumCard(TASK_DATA.MAX);
+createSpecifiedNumCard(TASK_DATA.MAX_TASK_COUNT);
