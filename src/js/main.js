@@ -1,7 +1,7 @@
 import {FILTER_DATA, TASK_DATA} from './data';
 import {clearSection, getRandomNumber} from './utils';
 import {createFilter} from './create-filter';
-import {createCard} from './create-card';
+import {createTask} from './create-task';
 import {createRandomTask} from './create-random-task';
 
 const FILTER_BLOCK = document.querySelector(`.main__filter`);
@@ -22,7 +22,7 @@ const fillCardWithFilters = (data, section) => {
  */
 const createSpecifiedNumCard = (num) => {
   for (let i = 0; i < num; i++) {
-    CARD_BLOCK.insertAdjacentHTML(`beforeend`, createCard(createRandomTask()));
+    CARD_BLOCK.insertAdjacentHTML(`beforeend`, createTask(createRandomTask()));
   }
 };
 

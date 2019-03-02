@@ -16,26 +16,17 @@ const makeTagsBtn = (arr) => {
   return str;
 };
 
-export const createCard = (data) => {
-  return `<article class="card ${getStatusCard(data.type)} card--${data.color}">
+export const createTask = (data) => {
+  return `<article class="card card--${data.color} ${getStatusCard(data.type)}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__control">
-            <button type="button" class="card__btn card__btn--edit">
-              edit
-            </button>
-            <button type="button" class="card__btn card__btn--archive">
-              archive
-            </button>
-            <button
-              type="button"
-              class="card__btn card__btn--favorites card__btn--disabled"
-            >
-              favorites
-            </button>
+            <button type="button" class="card__btn card__btn--edit">edit</button>
+            <button type="button" class="card__btn ${data.isDone ? ` card__btn--archive` : ``}">${data.isDone ? `archive` : ``}</button>
+            <button type="button" class="card__btn card__btn--favorites ${data.isFavorite ? `` : `card__btn--disabled`}">${data.isFavorite ? ` favorites` : ` `}</button>
           </div>
 
-          <div class="card__color-bar">
+          <div class="card__color-bar-wave">
             <svg width="100%" height="10">
               <use xlink:href="#wave"></use>
             </svg>
@@ -43,12 +34,7 @@ export const createCard = (data) => {
 
           <div class="card__textarea-wrap">
             <label>
-              <textarea
-                class="card__text"
-                placeholder="Start typing your text here..."
-                name="text"
-              >${data.title}</textarea
-              >
+              <textarea class="card__text" placeholder="Start typing your text here..." name="text">${data.title}</textarea>
             </label>
           </div>
 
@@ -56,7 +42,7 @@ export const createCard = (data) => {
             <div class="card__details">
               <div class="card__dates">
                 <button class="card__date-deadline-toggle" type="button">
-                  date: <span class="card__date-status">no</span>
+                  date: <span class="card__date-status">${data.dueDate ? `no` : `yes`}</span>
                 </button>
 
                 <fieldset class="card__date-deadline" >
@@ -64,6 +50,7 @@ export const createCard = (data) => {
                     <input
                       class="card__date"
                       type="text"
+                      value="${data.dueDate[0]}"
                       placeholder="${data.dueDate[0]}"
                       name="date"
                     />
@@ -72,6 +59,7 @@ export const createCard = (data) => {
                     <input
                       class="card__time"
                       type="text"
+                      value="${data.dueDate[1]}"
                       placeholder="${data.dueDate[1]}"
                       name="time"
                     />
@@ -82,7 +70,7 @@ export const createCard = (data) => {
                   repeat:<span class="card__repeat-status">no</span>
                 </button>
 
-                <fieldset class="card__repeat-days" disabled>
+                <fieldset class="card__repeat-days">
                   <div class="card__repeat-days-inner">
                     <input
                       class="visually-hidden card__repeat-day-input"
