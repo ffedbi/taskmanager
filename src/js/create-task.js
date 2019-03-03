@@ -1,9 +1,7 @@
-const getStatusCard = (type) => `${type ? `card--${type}` : ``}`;
-
-const makeTagsBtn = (arr) => {
-  let str = ``;
-  for (let item of arr) {
-    str += `<span class="card__hashtag-inner">
+const createTagsHtml = (tags) => {
+  const tagsHTML = ``;
+  for (let item of tags) {
+    tagsHTML += `<span class="card__hashtag-inner">
               <input type="hidden"
                      name="hashtag"
                      value="${item}"
@@ -13,11 +11,11 @@ const makeTagsBtn = (arr) => {
               <button type="button" class="card__hashtag-delete">delete</button>
             </span>`;
   }
-  return str;
+  return tagsHTML;
 };
 
-export const createRandomTask = (data) => {
-  return `<article class="card card--${data.color} ${getStatusCard(data.type)}">
+export const createTask = (data) => {
+  return `<article class="card card--${data.color} ${data.type ? `card--${data.type}` : ``}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__control">
@@ -154,7 +152,7 @@ export const createRandomTask = (data) => {
               </div>
 
               <div class="card__hashtag">
-                <div class="card__hashtag-list">${makeTagsBtn(data.tags)}</div>
+                <div class="card__hashtag-list">${createTagsHtml(data.tags)}</div>
 
                 <label>
                   <input

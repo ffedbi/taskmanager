@@ -4,6 +4,7 @@ const OPTIONS_DATE = {
   hour12: true
 };
 
+// one week in milliseconds
 const DEVIATION_TIME = 7 * 24 * 60 * 60 * 1000;
 
 /**
