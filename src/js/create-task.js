@@ -1,5 +1,5 @@
 const createTagsHtml = (tags) => {
-  const tagsHTML = ``;
+  let tagsHTML = ``;
   for (let item of tags) {
     tagsHTML += `<span class="card__hashtag-inner">
               <input type="hidden"
