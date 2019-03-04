@@ -2,7 +2,7 @@ export const FILTER_DATA = [
   {
     name: `All`,
     amount: 15,
-    isChecked: true
+    isChecked: true,
   },
   {
     name: `Overdue`,
@@ -30,9 +30,13 @@ export const FILTER_DATA = [
   },
 ];
 
-export const CARD_DATA = {
-  MIN: 1,
-  MAX: 7,
-  COLOR_CLASS: [`black`, `yellow`, `blue`, `green`, `pink`],
-  TYPE: [`repeat`, `deadline`, ``],
+export const TASK_DATA = {
+  MIN_TASK_COUNT: 1,
+  MAX_TASK_COUNT: 7,
+  MIN_TAGS_COUNT: 0,
+  MAX_TAGS_COUNT: 3,
+  COLOR_CLASSES: [`black`, `yellow`, `blue`, `green`, `pink`],
+  TYPES: [`repeat`, `deadline`, ``],
+  TITLES: [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`],
+  TAGS: [`homework`, `theory`, `practice`, `intensive`, `keks`],
 };

@@ -1,15 +1,16 @@
-import {FILTER_DATA, CARD_DATA} from './data';
-import {clearSection, getRandomNumber} from "./utils";
-import {createFilter} from "./create-filter";
-import {createCard} from "./create-card";
+import {FILTER_DATA, TASK_DATA} from './data';
+import {clearSection, getRandomNumber} from './utils';
+import {createFilter} from './create-filter';
+import {createTask} from './create-task';
+import {createRandomTaskData} from './create-random-task-data';
 
 const FILTER_BLOCK = document.querySelector(`.main__filter`);
-const CARD_LIST = document.querySelector(`.board__tasks`);
+const CARD_BLOCK = document.querySelector(`.board__tasks`);
 
 /**
  * Заполняет ноду фильтрами
  * @param {Array} data - массив фильтров
- * @param {string} section - DOM нода
+ * @param {HTMLElement} section - DOM нода
  */
 const fillCardWithFilters = (data, section) => {
   data.forEach((item) => section.insertAdjacentHTML(`beforeend`, createFilter(item.name, item.amount, item.isChecked)));
@@ -18,22 +19,21 @@ const fillCardWithFilters = (data, section) => {
 /**
  * Отрисовывает заданное количество карточек
  * @param {number} num - число карточек которое нужно отрисовать
- * @param {Array} data - массив с данными
  */
 const createSpecifiedNumCard = (num) => {
   for (let i = 0; i < num; i++) {
-    CARD_LIST.insertAdjacentHTML(`beforeend`, createCard(CARD_DATA));
+    CARD_BLOCK.insertAdjacentHTML(`beforeend`, createTask(createRandomTaskData()));
   }
 };
 
 FILTER_BLOCK.addEventListener(`change`, (e) => {
   if (e.target.tagName.toLowerCase() === `input`) {
-    clearSection(CARD_LIST);
-    createSpecifiedNumCard(getRandomNumber(CARD_DATA.MIN, CARD_DATA.MAX));
+    clearSection(CARD_BLOCK);
+    createSpecifiedNumCard(getRandomNumber(TASK_DATA.MIN_TASK_COUNT, TASK_DATA.MAX_TASK_COUNT));
   }
 });
 
-clearSection(CARD_LIST);
+clearSection(CARD_BLOCK);
 clearSection(FILTER_BLOCK);
 fillCardWithFilters(FILTER_DATA, FILTER_BLOCK);
-createSpecifiedNumCard(CARD_DATA.MAX);
+createSpecifiedNumCard(TASK_DATA.MAX_TASK_COUNT);
