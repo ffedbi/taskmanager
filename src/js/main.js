@@ -1,8 +1,9 @@
 import {FILTER_DATA, TASK_DATA} from './data';
 import {clearSection, getRandomNumber} from './utils';
 import {createFilter} from './create-filter';
-import {createTask} from './create-task';
-import {createRandomTaskData} from './create-random-task-data';
+import {createRandomDataTask} from './create-random-data-task';
+import {Task} from "./task";
+import {TaskEdit} from "./task-edit";
 
 const FILTER_BLOCK = document.querySelector(`.main__filter`);
 const CARD_BLOCK = document.querySelector(`.board__tasks`);
@@ -13,7 +14,7 @@ const CARD_BLOCK = document.querySelector(`.board__tasks`);
  * @param {HTMLElement} section - DOM нода
  */
 const fillCardWithFilters = (data, section) => {
-  data.forEach((item) => section.insertAdjacentHTML(`beforeend`, createFilter(item.name, item.amount, item.isChecked)));
+  data.forEach((item) => section.insertAdjacentHTML(`beforeend`, createFilter(item)));
 };
 
 /**
@@ -22,7 +23,23 @@ const fillCardWithFilters = (data, section) => {
  */
 const createSpecifiedNumCard = (num) => {
   for (let i = 0; i < num; i++) {
-    CARD_BLOCK.insertAdjacentHTML(`beforeend`, createTask(createRandomTaskData()));
+    let data = createRandomDataTask();
+    const task = new Task(data);
+    const taskEdit = new TaskEdit(data);
+
+    task.render(CARD_BLOCK);
+
+    task.onEdit = () => {
+      taskEdit.render(CARD_BLOCK);
+      CARD_BLOCK.replaceChild(taskEdit.element, task.element);
+      task.destroy();
+    };
+
+    taskEdit.onSubmit = () => {
+      task.render(CARD_BLOCK);
+      CARD_BLOCK.replaceChild(task.element, taskEdit.element);
+      taskEdit.destroy();
+    };
   }
 };
 
@@ -37,4 +54,5 @@ clearSection(CARD_BLOCK);
 clearSection(FILTER_BLOCK);
 fillCardWithFilters(FILTER_DATA, FILTER_BLOCK);
 createSpecifiedNumCard(TASK_DATA.MAX_TASK_COUNT);
+
 

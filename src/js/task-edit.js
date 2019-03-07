@@ -1,6 +1,6 @@
 import {createElement} from "./create-element";
 
-export class Task {
+export class TaskEdit {
   constructor(data) {
     this._color = data.color;
     this._type = data.type;
@@ -13,7 +13,7 @@ export class Task {
     this._picture = data.picture;
 
     this._element = null;
-    this._onEdit = null;
+    this._onSubmit = null;
   }
 
   _createTagsHtml() {
@@ -32,18 +32,15 @@ export class Task {
     return tagsHTML;
   }
 
-  _isRepeatingTask() {
-    return Object.values(this._repeatingDays).some((item) => item === 1);
-  }
-
-  _onEditButtonClick() {
-    if (typeof this._onEdit === `function`) {
-      this._onEdit();
+  _onSubmitBtnClick(evt) {
+    evt.preventDefault();
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit();
     }
   }
 
-  set onEdit(fn) {
-    this._onEdit = fn;
+  set onSubmit(fn) {
+    this._onSubmit = fn;
   }
 
   get element() {
@@ -51,7 +48,7 @@ export class Task {
   }
 
   get template() {
-    return `<article class="card card--${this._color} ${this._type ? `card--${this._type}` : ``}">
+    return `<article class="card card--edit card--${this._color} ${this._type ? `card--${this._type}` : ``}">
   <form class="card__form" method="get">
     <div class="card__inner">
       <div class="card__control">
@@ -59,22 +56,26 @@ export class Task {
         <button type="button" class="card__btn ${this._isDone ? ` card__btn--archive` : ``}">${this._isDone ? `archive` : ``}</button>
         <button type="button" class="card__btn card__btn--favorites ${this._isFavorite ? `` : `card__btn--disabled`}">${this._isFavorite ? ` favorites` : ` `}</button>
       </div>
+
       <div class="card__color-bar-wave">
         <svg width="100%" height="10">
           <use xlink:href="#wave"></use>
         </svg>
       </div>
+
       <div class="card__textarea-wrap">
         <label>
           <textarea class="card__text" placeholder="Start typing your text here..." name="text">${this._title}</textarea>
         </label>
       </div>
+
       <div class="card__settings">
         <div class="card__details">
           <div class="card__dates">
             <button class="card__date-deadline-toggle" type="button">
               date: <span class="card__date-status">${this._dueDate ? `no` : `yes`}</span>
             </button>
+
             <fieldset class="card__date-deadline" >
               <label class="card__input-deadline-wrap">
                 <input
@@ -95,9 +96,11 @@ export class Task {
                 />
               </label>
             </fieldset>
+
             <button class="card__repeat-toggle" type="button">
-              repeat:<span class="card__repeat-status">${this._isRepeatingTask() ? `yes` : `no`}</span>
+              repeat:<span class="card__repeat-status">no</span>
             </button>
+
             <fieldset class="card__repeat-days">
               <div class="card__repeat-days-inner">
                 <input
@@ -180,8 +183,10 @@ export class Task {
               </div>
             </fieldset>
           </div>
+
           <div class="card__hashtag">
             <div class="card__hashtag-list">${this._createTagsHtml(this._tags)}</div>
+
             <label>
               <input
                 type="text"
@@ -192,6 +197,7 @@ export class Task {
             </label>
           </div>
         </div>
+
         <label class="card__img-wrap ${this._picture ? `` : ` card__img-wrap--empty`}">
           <input
             type="file"
@@ -204,6 +210,7 @@ export class Task {
             class="card__img"
           />
         </label>
+
         <div class="card__colors-inner">
           <h3 class="card__colors-title">Color</h3>
           <div class="card__colors-wrap">
@@ -271,21 +278,22 @@ export class Task {
           </div>
         </div>
       </div>
+
       <div class="card__status-btns">
         <button class="card__save" type="submit">save</button>
         <button class="card__delete" type="button">delete</button>
       </div>
     </div>
   </form>
-</article>`;
+</article>`.trim();
   }
 
   bind() {
-    this._element.querySelector(`.card__btn--edit`).addEventListener(`click`, this._onEditButtonClick.bind(this));
+    this._element.querySelector(`.card__form`).addEventListener(`submit`, this._onSubmitBtnClick.bind(this));
   }
 
   unbind() {
-    this._element.removeEventListener(`click`, this._onEditButtonClick);
+    this._element.removeEventListener(`submit`, this._onSubmitBtnClick.bind(this));
   }
 
   render(container) {
@@ -306,5 +314,3 @@ export class Task {
     this._element = null;
   }
 }
-
-
