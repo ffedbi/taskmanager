@@ -37,3 +37,4 @@ clearSection(CARD_BLOCK);
 clearSection(FILTER_BLOCK);
 fillCardWithFilters(FILTER_DATA, FILTER_BLOCK);
 createSpecifiedNumCard(TASK_DATA.MAX_TASK_COUNT);
+
