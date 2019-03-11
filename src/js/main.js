@@ -1,7 +1,7 @@
 import {FILTER_DATA, TASK_DATA} from './data';
 import {clearSection, getRandomNumber} from './utils';
 import {createFilter} from './create-filter';
-import {createRandomDataTask} from './create-random-data-task';
+import {createRandomTaskData} from './create-random-task-data';
 import {Task} from "./task";
 import {TaskEdit} from "./task-edit";
 
@@ -18,41 +18,43 @@ const fillCardWithFilters = (data, section) => {
 };
 
 /**
- * Отрисовывает заданное количество карточек
- * @param {number} num - число карточек которое нужно отрисовать
+ * Отрисовывает заданное количество задач
+ * @param {Number} num - количество тасков
+ * @param {*} section - дом элемент
  */
-const createSpecifiedNumCard = (num) => {
+const createSpecifiedNumTask = (num, section) => {
   for (let i = 0; i < num; i++) {
-    let data = createRandomDataTask();
-    const task = new Task(data);
-    const taskEdit = new TaskEdit(data);
-
-    task.render(CARD_BLOCK);
+    let taskData = createRandomTaskData();
+    let task = new Task(taskData);
+    let taskEdit = new TaskEdit(taskData);
 
     task.onEdit = () => {
-      taskEdit.render(CARD_BLOCK);
-      CARD_BLOCK.replaceChild(taskEdit.element, task.element);
+      taskEdit.render();
+      section.replaceChild(taskEdit.element, task.element);
       task.destroy();
     };
 
     taskEdit.onSubmit = () => {
-      task.render(CARD_BLOCK);
-      CARD_BLOCK.replaceChild(task.element, taskEdit.element);
+      task.render();
+      section.replaceChild(task.element, taskEdit.element);
       taskEdit.destroy();
     };
+
+    task.render();
+    section.appendChild(task.element);
   }
 };
 
 FILTER_BLOCK.addEventListener(`change`, (e) => {
   if (e.target.tagName.toLowerCase() === `input`) {
     clearSection(CARD_BLOCK);
-    createSpecifiedNumCard(getRandomNumber(TASK_DATA.MIN_TASK_COUNT, TASK_DATA.MAX_TASK_COUNT));
+    createSpecifiedNumTask(getRandomNumber(TASK_DATA.MIN_TASK_COUNT, TASK_DATA.MAX_TASK_COUNT), CARD_BLOCK);
   }
 });
 
 clearSection(CARD_BLOCK);
 clearSection(FILTER_BLOCK);
 fillCardWithFilters(FILTER_DATA, FILTER_BLOCK);
-createSpecifiedNumCard(TASK_DATA.MAX_TASK_COUNT);
+createSpecifiedNumTask(TASK_DATA.MAX_TASK_COUNT, CARD_BLOCK);
 
 

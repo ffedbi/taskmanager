@@ -10,7 +10,7 @@ const getRandomTagsSet = (arr) => {
   return tagsList;
 };
 
-export const createRandomDataTask = () => {
+export const createRandomTaskData = () => {
   return {
     title: getRandomArrayItem(TASK_DATA.TITLES),
     dueDate: [convertDate(), convertHours()],

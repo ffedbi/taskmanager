@@ -1,4 +1,4 @@
-import {createElement} from "./create-element";
+import {createDOMElementFromHTML} from "./utils";
 
 export class Task {
   constructor(data) {
@@ -14,6 +14,8 @@ export class Task {
 
     this._element = null;
     this._onEdit = null;
+
+    this._onEditButtonClick = this._onEditButtonClick.bind(this);
   }
 
   _createTagsHtml() {
@@ -280,29 +282,26 @@ export class Task {
 </article>`;
   }
 
-  bind() {
-    this._element.querySelector(`.card__btn--edit`).addEventListener(`click`, this._onEditButtonClick.bind(this));
-  }
-
-  unbind() {
-    this._element.removeEventListener(`click`, this._onEditButtonClick);
-  }
-
-  render(container) {
+  _bind() {
     if (this._element) {
-      this.unbind();
-      container.removeChild(this._element);
-      this._element = null;
+      this._element.querySelector(`.card__btn--edit`).addEventListener(`click`, this._onEditButtonClick);
     }
+  }
 
-    this._element = createElement(this.template);
-    container.appendChild(this._element);
+  _unbind() {
+    if (this._element) {
+      this._element.removeEventListener(`click`, this._onEditButtonClick);
+    }
+  }
 
-    this.bind();
+  render() {
+    this._element = createDOMElementFromHTML(this.template);
+    this._bind();
+    return this._element;
   }
 
   destroy() {
-    this.unbind();
+    this._unbind();
     this._element = null;
   }
 }
