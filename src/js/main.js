@@ -20,13 +20,13 @@ const fillCardWithFilters = (data, section) => {
 /**
  * Отрисовывает заданное количество задач
  * @param {Number} num - количество тасков
- * @param {*} section - дом элемент
+ * @param {HTMLElement} section - дом элемент
  */
 const createSpecifiedNumTask = (num, section) => {
   for (let i = 0; i < num; i++) {
-    let taskData = createRandomTaskData();
-    let task = new Task(taskData);
-    let taskEdit = new TaskEdit(taskData);
+    let data = createRandomTaskData();
+    let task = new Task(data);
+    let taskEdit = new TaskEdit(data);
 
     task.onEdit = () => {
       taskEdit.render();

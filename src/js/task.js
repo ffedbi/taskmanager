@@ -295,8 +295,10 @@ export class Task {
   }
 
   render() {
+    this.destroy();
     this._element = createDOMElementFromHTML(this.template);
     this._bind();
+
     return this._element;
   }
 

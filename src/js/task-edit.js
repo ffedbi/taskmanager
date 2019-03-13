@@ -302,6 +302,7 @@ export class TaskEdit {
   }
 
   render() {
+    this.destroy();
     this._element = createDOMElementFromHTML(this.template);
     this._bind();
 
