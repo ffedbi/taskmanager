@@ -44,3 +44,9 @@ export const convertDate = () => {
 };
 
 export const convertHours = () => new Date(createDateTask()).toLocaleString(`en-US`, OPTIONS_DATE);
+
+export const createDOMElementFromHTML = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
