@@ -1,7 +1,8 @@
-import {createDOMElementFromHTML} from "./utils";
+import {Component} from "./component";
 
-export class TaskEdit {
+export class TaskEdit extends Component {
   constructor(data) {
+    super();
     this._color = data.color;
     this._type = data.type;
     this._isDone = data.isDone;
@@ -12,7 +13,6 @@ export class TaskEdit {
     this._tags = data.tags;
     this._picture = data.picture;
 
-    this._element = null;
     this._onSubmit = null;
     this._onSubmitBtnClick = this._onSubmitBtnClick.bind(this);
   }
@@ -42,10 +42,6 @@ export class TaskEdit {
 
   set onSubmit(fn) {
     this._onSubmit = fn;
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -299,18 +295,5 @@ export class TaskEdit {
     if (this._element) {
       this._element.removeEventListener(`submit`, this._onSubmitBtnClick);
     }
-  }
-
-  render() {
-    this.destroy();
-    this._element = createDOMElementFromHTML(this.template);
-    this._bind();
-
-    return this._element;
-  }
-
-  destroy() {
-    this._unbind();
-    this._element = null;
   }
 }

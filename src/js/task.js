@@ -1,7 +1,8 @@
-import {createDOMElementFromHTML} from "./utils";
+import {Component} from "./component";
 
-export class Task {
+export class Task extends Component {
   constructor(data) {
+    super();
     this._color = data.color;
     this._type = data.type;
     this._isDone = data.isDone;
@@ -12,7 +13,6 @@ export class Task {
     this._tags = data.tags;
     this._picture = data.picture;
 
-    this._element = null;
     this._onEdit = null;
 
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
@@ -46,10 +46,6 @@ export class Task {
 
   set onEdit(fn) {
     this._onEdit = fn;
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -292,19 +288,6 @@ export class Task {
     if (this._element) {
       this._element.removeEventListener(`click`, this._onEditButtonClick);
     }
-  }
-
-  render() {
-    this.destroy();
-    this._element = createDOMElementFromHTML(this.template);
-    this._bind();
-
-    return this._element;
-  }
-
-  destroy() {
-    this._unbind();
-    this._element = null;
   }
 }
 
