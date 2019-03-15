@@ -1,9 +1,3 @@
-const OPTIONS_DATE = {
-  hour: `numeric`,
-  minute: `numeric`,
-  hour12: true
-};
-
 // one week in milliseconds
 const DEVIATION_TIME = 7 * 24 * 60 * 60 * 1000;
 
@@ -32,20 +26,13 @@ export const clearSection = (section) => {
   section.innerHTML = ``;
 };
 
-const createDateTask = () => {
+export const createDateTask = () => {
   const dateTask = Date.now();
   const arrTimeSift = [dateTask + DEVIATION_TIME, dateTask - DEVIATION_TIME];
   return getRandomNumber(arrTimeSift[0], arrTimeSift[1]);
 };
 
-export const convertDate = () => {
-  const result = new Date(createDateTask()).toLocaleString(`en-US`, {month: `long`, day: `numeric`});
-  return result.split(` `).reverse().join(` `);
-};
-
-export const convertHours = () => new Date(createDateTask()).toLocaleString(`en-US`, OPTIONS_DATE);
-
-export const createDOMElementFromHTML = (template) => {
+export const createDOMElementFromHtml = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;

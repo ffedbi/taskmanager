@@ -1,4 +1,4 @@
-import {getRandomNumber, getRandomArrayItem, convertDate, convertHours} from './utils';
+import {getRandomNumber, getRandomArrayItem, createDateTask} from './utils';
 import {TASK_DATA} from './data';
 
 const getRandomTagsSet = (arr) => {
@@ -10,20 +10,21 @@ const getRandomTagsSet = (arr) => {
   return tagsList;
 };
 
-export const createRandomTaskData = () => {
+export const createRandomTaskData = (num) => {
   return {
+    id: num,
     title: getRandomArrayItem(TASK_DATA.TITLES),
-    dueDate: [convertDate(), convertHours()],
+    dueDate: createDateTask(),
     tags: getRandomTagsSet(TASK_DATA.TAGS),
     picture: `http://picsum.photos/100/100?r=${Math.random()}`,
     repeatingDays: {
-      'Mo': getRandomNumber(0, 1),
-      'Tu': getRandomNumber(0, 1),
-      'We': getRandomNumber(0, 1),
-      'Th': getRandomNumber(0, 1),
-      'Fr': getRandomNumber(0, 1),
-      'Sa': getRandomNumber(0, 1),
-      'Su': getRandomNumber(0, 1),
+      'mo': false,
+      'tu': false,
+      'we': false,
+      'th': false,
+      'fr': false,
+      'sa': false,
+      'su': false,
     },
     isFavorite: getRandomNumber(0, 1),
     isDone: getRandomNumber(0, 1),
