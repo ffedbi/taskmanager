@@ -26,7 +26,7 @@ export const clearSection = (section) => {
   section.innerHTML = ``;
 };
 
-export const createDateTask = () => {
+export const createTaskDate = () => {
   const dateTask = Date.now();
   const arrTimeSift = [dateTask + DEVIATION_TIME, dateTask - DEVIATION_TIME];
   return getRandomNumber(arrTimeSift[0], arrTimeSift[1]);

@@ -48,6 +48,7 @@ export class Task extends Component {
   }
 
   get template() {
+    const dueDate = moment(new Date(this._dueDate));
     return `<article class="card card--${this._color} ${this._type ? `card--${this._type}` : ``}" id="${this._id}">
   <form class="card__form" method="get">
     <div class="card__inner">
@@ -69,12 +70,12 @@ export class Task extends Component {
           <button class="card__date-deadline-toggle" type="button">date: <span class="card__date-status">${this._dueDate ? `no` : `yes`}</span></button>
               <fieldset class="card__date-deadline" >
                 <label class="card__input-deadline-wrap">
-                  <input class="card__date" type="text" value="${moment(this._dueDate).format(`DD MMMM`)}" placeholder="${moment(this._dueDate).format(`DD MMMM`)}" name="date"/>
+                  <input class="card__date" type="text" value="${dueDate.format(`DD MMMM`)}" placeholder="${dueDate.format(`DD MMMM`)}" name="date"/>
                 </label>
                 <label class="card__input-deadline-wrap">
-                  <input class="card__time" type="text" value="${moment(this._dueDate).format(`h:mm A`)}" placeholder="${moment(this._dueDate).format(`h:mm A`)}" name="time"/>
+                  <input class="card__time" type="text" value="${dueDate.format(`h:mm A`)}" placeholder="${dueDate.format(`h:mm A`)}" name="time"/>
                 </label>
-              </fieldset>  
+              </fieldset>
             <div class="card__hashtag">
               <div class="card__hashtag-list">${this._createTagsHtml(this._tags)}</div>
             </div>
@@ -91,7 +92,7 @@ export class Task extends Component {
             class="card__img"
           />
         </label>
-       
+
       <div class="card__status-btns">
         <button class="card__save" type="submit">save</button>
         <button class="card__delete" type="button">delete</button>

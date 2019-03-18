@@ -8,11 +8,6 @@ import {TaskEdit} from "./task-edit";
 const FILTER_BLOCK = document.querySelector(`.main__filter`);
 const TASK_BLOCK = document.querySelector(`.board__tasks`);
 
-/**
- * Заполняет ноду фильтрами
- * @param {Array} data - массив фильтров
- * @param {HTMLElement} section - DOM нода
- */
 const fillCardWithFilters = (data, section) => {
   data.forEach((item) => section.insertAdjacentHTML(`beforeend`, createFilter(item)));
 };
@@ -29,12 +24,12 @@ const createSpecifiedNumCard = (num, section) => {
       task.destroy();
     };
 
-    taskEdit.onSubmit = ({title, tags, color, repeatingDays, dueDate}) => {
-      data.title = title;
-      data.tags = tags;
-      data.color = color;
-      data.repeatingDays = repeatingDays;
-      data.dueDate = dueDate;
+    taskEdit.onSubmit = (newData) => {
+      data.title = newData.title;
+      data.tags = newData.tags;
+      data.color = newData.color;
+      data.repeatingDays = newData.repeatingDays;
+      data.dueDate = newData.dueDate;
       task.update(data);
       task.render();
       section.replaceChild(task.element, taskEdit.element);
