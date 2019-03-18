@@ -10,9 +10,9 @@ const getRandomTagsSet = (arr) => {
   return tagsList;
 };
 
-export const createRandomTaskData = (id) => {
+export const createRandomTaskData = (num) => {
   return {
-    num: id,
+    id: num,
     title: getRandomArrayItem(TASK_DATA.TITLES),
     dueDate: createTaskDate(),
     tags: getRandomTagsSet(TASK_DATA.TAGS),
