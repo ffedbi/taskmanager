@@ -2,8 +2,8 @@ import {FILTER_DATA, TASK_DATA} from './data';
 import {clearSection, getRandomNumber} from './utils';
 import {createFilter} from './create-filter';
 import {createRandomTaskData} from './create-random-task-data';
-import {Task} from "./task";
-import {TaskEdit} from "./task-edit";
+import Task from "./task";
+import TaskEdit from "./task-edit";
 
 const FILTER_BLOCK = document.querySelector(`.main__filter`);
 const TASK_BLOCK = document.querySelector(`.board__tasks`);
@@ -30,6 +30,7 @@ const createSpecifiedNumCard = (num, section) => {
       data.color = newData.color;
       data.repeatingDays = newData.repeatingDays;
       data.dueDate = newData.dueDate;
+      data.picture = newData.picture;
       task.update(data);
       task.render();
       section.replaceChild(task.element, taskEdit.element);

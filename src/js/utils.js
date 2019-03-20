@@ -1,5 +1,7 @@
 // one week in milliseconds
 const DEVIATION_TIME = 7 * 24 * 60 * 60 * 1000;
+// valid file extension
+const FILE_TYPE = [`jpg`, `jpeg`, `png`];
 
 /**
  * Возвращает случайное значение в заданном диапазоне от:
@@ -36,4 +38,19 @@ export const createDOMElementFromHtml = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;
+};
+
+const uploadImg = (file, element) => {
+  const reader = new FileReader();
+  reader.addEventListener(`load`, function () {
+    element.src = reader.result;
+  });
+  reader.readAsDataURL(file);
+};
+
+export const createPreview = (fileElement, element) => {
+  const file = fileElement.files[0];
+  if (file && FILE_TYPE.some((item) => file.name.toLowerCase().endsWith(item))) {
+    uploadImg(file, element);
+  }
 };

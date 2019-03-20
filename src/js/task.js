@@ -1,7 +1,7 @@
-import {Component} from "./component";
+import Component from "./component";
 import moment from "moment";
 
-export class Task extends Component {
+export default class Task extends Component {
   constructor(data) {
     super();
 
@@ -49,7 +49,7 @@ export class Task extends Component {
 
   get template() {
     const dueDate = moment(new Date(this._dueDate));
-    return `<article class="card card--${this._color} ${this._type ? `card--${this._type}` : ``}" id="${this._id}">
+    return `<article class="card card--${this._color} ${this._isRepeatingTask() ? `card--repeat` : ``}${this._dueDate < new Date().getTime() ? `card--deadline` : ``}" id="${this._id}">
   <form class="card__form" method="get">
     <div class="card__inner">
       <div class="card__control">
@@ -57,8 +57,8 @@ export class Task extends Component {
         <button type="button" class="card__btn ${this._isDone ? ` card__btn--archive` : ``}">${this._isDone ? `archive` : ``}</button>
         <button type="button" class="card__btn card__btn--favorites ${this._isFavorite ? `` : `card__btn--disabled`}">${this._isFavorite ? ` favorites` : ` `}</button>
       </div>
-      <div class="card__color-bar-wave">
-        <svg width="100%" height="10">
+      <div class="card__color-bar">
+        <svg class="card__color-bar-wave" width="100%" height="10">
           <use xlink:href="#wave"></use>
         </svg>
       </div>
@@ -66,6 +66,7 @@ export class Task extends Component {
         <label><textarea class="card__text" placeholder="Start typing your text here..." name="text">${this._title}</textarea></label>
       </div>
       <div class="card__settings">
+      
         <div class="card__details">
           <button class="card__date-deadline-toggle" type="button">date: <span class="card__date-status">${this._dueDate ? `no` : `yes`}</span></button>
               <fieldset class="card__date-deadline" >
@@ -80,23 +81,17 @@ export class Task extends Component {
               <div class="card__hashtag-list">${this._createTagsHtml(this._tags)}</div>
             </div>
         </div>
+        
         <label class="card__img-wrap ${this._picture ? `` : ` card__img-wrap--empty`}">
-          <input
-            type="file"
-            class="card__img-input visually-hidden"
-            name="img"
-          />
-          <img
-            src="${this._picture ? this._picture : ``}"
-            alt="task picture"
-            class="card__img"
-          />
+          <input type="file" class="card__img-input visually-hidden" name="img"/>
+          <img src="${this._picture ? this._picture : ``}" alt="task picture" class="card__img"/>
         </label>
 
       <div class="card__status-btns">
         <button class="card__save" type="submit">save</button>
         <button class="card__delete" type="button">delete</button>
       </div>
+      
     </div>
   </form>
 </article>`;
@@ -105,12 +100,14 @@ export class Task extends Component {
   _bind() {
     if (this._element) {
       this._element.querySelector(`.card__btn--edit`).addEventListener(`click`, this._onEditButtonClick);
+      this._element.querySelector(`.card__text`).addEventListener(`click`, this._onEditButtonClick);
     }
   }
 
   _unbind() {
     if (this._element) {
       this._element.querySelector(`.card__btn--edit`).removeEventListener(`click`, this._onEditButtonClick);
+      this._element.querySelector(`.card__text`).removeEventListener(`click`, this._onEditButtonClick);
     }
   }
 
