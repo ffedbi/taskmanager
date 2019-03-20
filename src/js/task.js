@@ -6,7 +6,6 @@ export default class Task extends Component {
     super();
 
     this._color = data.color;
-    this._type = data.type;
     this._isDone = data.isDone;
     this._isFavorite = data.isFavorite;
     this._title = data.title;
@@ -34,7 +33,7 @@ export default class Task extends Component {
   }
 
   _isRepeatingTask() {
-    return Object.values(this._repeatingDays).some((item) => item === 1);
+    return Object.values(this._repeatingDays).some((item) => item === true);
   }
 
   _onEditButtonClick() {
@@ -47,9 +46,13 @@ export default class Task extends Component {
     this._onEdit = fn;
   }
 
+  _checkDeadlineTask() {
+    return this._dueDate < Date.now() ? `card--deadline` : ``;
+  }
+
   get template() {
     const dueDate = moment(new Date(this._dueDate));
-    return `<article class="card card--${this._color} ${this._isRepeatingTask() ? `card--repeat` : ``}${this._dueDate < new Date().getTime() ? `card--deadline` : ``}" id="${this._id}">
+    return `<article class="card card--${this._color} ${this._isRepeatingTask() ? `card--repeat` : ``} ${this._checkDeadlineTask()}" id="${this._id}">
   <form class="card__form" method="get">
     <div class="card__inner">
       <div class="card__control">
@@ -71,7 +74,7 @@ export default class Task extends Component {
           <button class="card__date-deadline-toggle" type="button">date: <span class="card__date-status">${this._dueDate ? `no` : `yes`}</span></button>
               <fieldset class="card__date-deadline" >
                 <label class="card__input-deadline-wrap">
-                  <input class="card__date" type="text" value="${dueDate.format(`DD MMMM`)}" placeholder="${dueDate.format(`DD MMMM`)}" name="date"/>
+                  <input class="card__date" type="text" value="${dueDate.format(`D MMMM`)}" placeholder="${dueDate.format(`D MMMM`)}" name="date"/>
                 </label>
                 <label class="card__input-deadline-wrap">
                   <input class="card__time" type="text" value="${dueDate.format(`h:mm A`)}" placeholder="${dueDate.format(`h:mm A`)}" name="time"/>
