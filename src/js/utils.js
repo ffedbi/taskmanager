@@ -1,11 +1,7 @@
-const OPTIONS_DATE = {
-  hour: `numeric`,
-  minute: `numeric`,
-  hour12: true
-};
-
 // one week in milliseconds
 const DEVIATION_TIME = 7 * 24 * 60 * 60 * 1000;
+// valid file extension
+const FILE_TYPE = [`jpg`, `jpeg`, `png`];
 
 /**
  * Возвращает случайное значение в заданном диапазоне от:
@@ -32,21 +28,29 @@ export const clearSection = (section) => {
   section.innerHTML = ``;
 };
 
-const createDateTask = () => {
+export const createTaskDate = () => {
   const dateTask = Date.now();
   const arrTimeSift = [dateTask + DEVIATION_TIME, dateTask - DEVIATION_TIME];
   return getRandomNumber(arrTimeSift[0], arrTimeSift[1]);
 };
 
-export const convertDate = () => {
-  const result = new Date(createDateTask()).toLocaleString(`en-US`, {month: `long`, day: `numeric`});
-  return result.split(` `).reverse().join(` `);
-};
-
-export const convertHours = () => new Date(createDateTask()).toLocaleString(`en-US`, OPTIONS_DATE);
-
-export const createDOMElementFromHTML = (template) => {
+export const createDOMElementFromHtml = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;
+};
+
+const uploadImg = (file, element) => {
+  const reader = new FileReader();
+  reader.addEventListener(`load`, function () {
+    element.src = reader.result;
+  });
+  reader.readAsDataURL(file);
+};
+
+export const createPreview = (fileElement, element) => {
+  const file = fileElement.files[0];
+  if (file && FILE_TYPE.some((item) => file.name.toLowerCase().endsWith(item))) {
+    uploadImg(file, element);
+  }
 };
