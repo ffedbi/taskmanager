@@ -26,8 +26,10 @@ export default class TaskEdit extends Component {
 
     this._onSubmit = null;
     this._onKeyEsc = null;
+    this._onDelete = null;
     this._onSubmitBtnClick = this._onSubmitBtnClick.bind(this);
     this._onKeydownEsc = this._onKeydownEsc.bind(this);
+    this._onClickBtnDelete = this._onClickBtnDelete.bind(this);
 
     this._onChangeColorTask = this._onChangeColorTask.bind(this);
     this._onAddedHashtag = this._onAddedHashtag.bind(this);
@@ -64,7 +66,7 @@ export default class TaskEdit extends Component {
         'sa': false,
         'su': false,
       },
-      picture: ``
+      picture: ``,
     };
 
     const taskEditMapper = TaskEdit.createMapper(entry);
@@ -104,6 +106,13 @@ export default class TaskEdit extends Component {
   _onKeydownEsc(e) {
     if (typeof this._onKeyEsc === `function` && e.keyCode === 27) {
       this._onKeyEsc();
+    }
+  }
+
+  _onClickBtnDelete(e) {
+    e.preventDefault();
+    if (typeof this._onDelete === `function`) {
+      this._onDelete();
     }
   }
 
@@ -159,10 +168,15 @@ export default class TaskEdit extends Component {
     this._onKeyEsc = fn;
   }
 
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
   _bind() {
     if (this._element) {
       this._element.querySelector(`.card__form`).addEventListener(`submit`, this._onSubmitBtnClick);
       document.addEventListener(`keydown`, this._onKeydownEsc);
+      this._element.querySelector(`.card__delete`).addEventListener(`click`, this._onClickBtnDelete);
 
       this._element.querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, this._onChangeDate);
       this._element.querySelector(`.card__repeat-toggle`).addEventListener(`click`, this._onChangeRepeated);
@@ -193,6 +207,7 @@ export default class TaskEdit extends Component {
     if (this._element) {
       this._element.removeEventListener(`submit`, this._onSubmitBtnClick);
       document.removeEventListener(`keydown`, this._onKeydownEsc);
+      this._element.querySelector(`.card__delete`).removeEventListener(`click`, this._onClickBtnDelete);
       flatpickr(this._element.querySelector(`.card__date`)).destroy();
       flatpickr(this._element.querySelector(`.card__time`)).destroy();
 
@@ -261,7 +276,7 @@ export default class TaskEdit extends Component {
       img(value) {
         /* !!! */
         target.picture = value;
-      }
+      },
     };
   }
 
@@ -285,10 +300,9 @@ export default class TaskEdit extends Component {
     let str = ``;
     Object.keys(this._repeatingDays).forEach((item) => {
       str += `<input class="visually-hidden card__repeat-day-input" type="checkbox" id="repeat-${item}-${this._id}" name="repeat" value="${item}" ${this._repeatingDays[item] && ` checked`}/>
-             <label class="card__repeat-day" for="repeat-${item}-${this._id}">${item}</label>`.trim();
-    }
-    );
-
+      <label class="card__repeat-day" for="repeat-${item}-${this._id}">${item}</label>`.trim();
+    });
+    
     return str;
   }
 
