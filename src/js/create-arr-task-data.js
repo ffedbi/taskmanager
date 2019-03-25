@@ -10,9 +10,9 @@ const getRandomTagsSet = (arr) => {
   return tagsList;
 };
 
-export const createRandomTaskData = (num) => {
+const createRandomTaskData = (id) => {
   return {
-    id: num,
+    id: id,
     title: getRandomArrayItem(TASK_DATA.TITLES),
     dueDate: createTaskDate(),
     tags: getRandomTagsSet(TASK_DATA.TAGS),
@@ -30,5 +30,15 @@ export const createRandomTaskData = (num) => {
     isDone: getRandomNumber(0, 1),
     color: getRandomArrayItem(TASK_DATA.COLOR_CLASSES),
     type: getRandomArrayItem(TASK_DATA.TYPES),
+    isArhive: getRandomNumber(0, 1)
   };
+};
+
+export const createArrTaskData = (num) => {
+  let arr = [];
+  for (let i = 0; i < num; i++) {
+    arr.push(createRandomTaskData(i));
+  }
+
+  return arr;
 };

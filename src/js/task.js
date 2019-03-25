@@ -33,7 +33,7 @@ export default class Task extends Component {
   }
 
   _isRepeatingTask() {
-    return Object.values(this._repeatingDays).some((item) => item === true);
+    return Object.values(this._repeatingDays).some((item) => item === 1);
   }
 
   _onEditButtonClick() {
