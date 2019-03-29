@@ -1,20 +1,49 @@
-import {FILTER_DATA, TASK_DATA} from './data';
+import {FILTER_DATA} from './data';
 import {clearSection} from './utils';
-import {createArrTaskData} from './create-arr-task-data';
 import Task from "./task";
 import TaskEdit from "./task-edit";
 import Filter from "./filter";
 import {statInit} from "./statistics";
 import moment from 'moment';
+import API from "./api";
 
 const FILTER_BLOCK = document.querySelector(`.main__filter`);
 const TASK_BLOCK = document.querySelector(`.board__tasks`);
-const btnActiveStatistic = document.querySelector(`#control__statistic`);
-const sectionTask = document.querySelector(`.board`);
-const statistic = document.querySelector(`.statistic`);
-const btnTasks = document.querySelector(`#control__task`);
+const BUTTON_STATISTIC = document.querySelector(`#control__statistic`);
+const SECTIONS_TASK = document.querySelector(`.board`);
+const STATISTIC = document.querySelector(`.statistic`);
+const BUTTON_TASKS = document.querySelector(`#control__task`);
 
-const arrTasks = createArrTaskData(TASK_DATA.MAX_TASK_COUNT);
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://es8-demo-srv.appspot.com/task-manager`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+let arrTasks = null;
+
+const deleteTask = (tasks, id) => {
+  tasks.splice(id, 1);
+  return tasks;
+};
+
+const LoadingMsg = {
+  loading: `Loading tasks...`,
+  error: `Something went wrong while loading your tasks. Check your connection or try again later`,
+};
+
+const BLOCK_MASSAGE = document.querySelector(`.board__no-tasks`);
+BLOCK_MASSAGE.classList.remove(`visually-hidden`);
+BLOCK_MASSAGE.textContent = LoadingMsg.loading;
+
+api.getTasks()
+  .then((tasks) => {
+    arrTasks = tasks;
+    renderTasks(tasks, TASK_BLOCK);
+  })
+  .then(() => {
+    BLOCK_MASSAGE.classList.add(`visually-hidden`);
+  })
+  .catch(() => {
+    BLOCK_MASSAGE.textContent = LoadingMsg.error;
+  });
 
 const fillCardWithFilters = (data, section) => {
   for (let i = 0; i < data.length; i++) {
@@ -24,15 +53,16 @@ const fillCardWithFilters = (data, section) => {
     filter.onFilter = () => {
       clearSection(TASK_BLOCK);
       let newFilterData = filterTasks(arrTasks, filter.name);
-      createSpecifiedNumCard(newFilterData, TASK_BLOCK);
+      renderTasks(newFilterData, TASK_BLOCK);
     };
 
     filter.render();
     section.appendChild(filter.element);
   }
-}
+};
 
-const filterTasks = (tasks, filterName) => {
+const filterTasks = (tasks, name) => {
+  const filterName = name.toLowerCase();
   switch (filterName) {
     case `all`:
       return tasks;
@@ -49,75 +79,89 @@ const filterTasks = (tasks, filterName) => {
         .some((rec) => rec[1]));
     case `tags`:
       return tasks.filter((task) => task.tags.size);
-    case `Arhive`:
-      return tasks.filter((task) => task.isArhive);
+    case `archive`:
+      return tasks.filter((task) => task.isDone);
     default:
       return tasks;
   }
 };
-
-const deleteTask = (tasks, id) => {
-  tasks.splice(id, 1);
-  return tasks;
-};
-
-const createSpecifiedNumCard = (data, section) => {
-  for (let i = 0; i < data.length; i++) {
-    const task = new Task(data[i]);
-    const taskEdit = new TaskEdit(data[i]);
+const renderTasks = (data) => {
+  clearSection(TASK_BLOCK);
+  for (let item of data) {
+    const task = new Task(item);
+    const taskEdit = new TaskEdit(item);
 
     task.onEdit = () => {
       taskEdit.render();
-      section.replaceChild(taskEdit.element, task.element);
+      TASK_BLOCK.replaceChild(taskEdit.element, task.element);
       task.destroy();
     };
 
     taskEdit.onSubmit = (newData) => {
-      data.title = newData.title;
-      data.tags = newData.tags;
-      data.color = newData.color;
-      data.repeatingDays = newData.repeatingDays;
-      data.dueDate = newData.dueDate;
-      data.picture = newData.picture;
-      task.update(data);
-      task.render();
-      section.replaceChild(task.element, taskEdit.element);
-      taskEdit.destroy();
+      item.title = newData.title;
+      item.tags = newData.tags;
+      item.color = newData.color;
+      item.repeatingDays = newData.repeatingDays;
+      item.dueDate = newData.dueDate;
+      item.picture = newData.picture;
+
+      taskEdit.lockTaskToSaving();
+
+      api.updateTask({id: item.id, data: item.toRAW()})
+        .then((response) => {
+          if (response) {
+            task.update(response);
+            task.render();
+            TASK_BLOCK.replaceChild(task.element, taskEdit.element);
+          }
+        })
+        .catch(() => {
+          taskEdit.setBorderColorTask(`#ff0000`);
+          taskEdit.shake();
+        })
+        .then(() => {
+          taskEdit.setBorderColorTask(`#000000`);
+          taskEdit.unblockTaskSave();
+          taskEdit.destroy();
+        });
     };
 
     taskEdit.onKeyEsc = () => {
       task.render();
-      section.replaceChild(task.element, taskEdit.element);
+      TASK_BLOCK.replaceChild(task.element, taskEdit.element);
       taskEdit.destroy();
     };
 
-    taskEdit.onDelete = () => {
-      deleteTask(arrTasks, i);
-      taskEdit.element.remove();
-      taskEdit.destroy();
-    };
+    taskEdit.onDelete = (({id}) => {
+      taskEdit.lockTaskToDeleting();
+
+      api.deleteTask({id})
+        .then(() => api.getTasks())
+        .then(renderTasks)
+        .then(() => {
+          taskEdit.unblockTaskDelete();
+        })
+        .catch(alert);
+
+      deleteTask(arrTasks, id);
+    });
 
     task.render();
-    section.appendChild(task.element);
+    TASK_BLOCK.appendChild(task.element);
   }
 };
 
-clearSection(TASK_BLOCK);
-clearSection(FILTER_BLOCK);
-fillCardWithFilters(FILTER_DATA, FILTER_BLOCK);
-createSpecifiedNumCard(arrTasks, TASK_BLOCK);
-
 const onClickBtnStatistics = () => {
-  sectionTask.classList.add(`visually-hidden`);
-  statistic.classList.remove(`visually-hidden`);
+  SECTIONS_TASK.classList.add(`visually-hidden`);
+  STATISTIC.classList.remove(`visually-hidden`);
   statInit(arrTasks);
 };
 
 const onClickBtnTasks = () => {
-  sectionTask.classList.remove(`visually-hidden`);
-  statistic.classList.add(`visually-hidden`);
+  SECTIONS_TASK.classList.remove(`visually-hidden`);
+  STATISTIC.classList.add(`visually-hidden`);
 };
 
-btnActiveStatistic.addEventListener(`click`, onClickBtnStatistics);
-btnTasks.addEventListener(`click`, onClickBtnTasks);
-
+fillCardWithFilters(FILTER_DATA, FILTER_BLOCK);
+BUTTON_STATISTIC.addEventListener(`click`, onClickBtnStatistics);
+BUTTON_TASKS.addEventListener(`click`, onClickBtnTasks);

@@ -46,6 +46,10 @@ export default class Filter extends Component {
     }
   }
 
+  updateCounter(newAmount) {
+    this._element.querySelector(`span`).textContent = newAmount;
+  }
+
   render() {
     this.destroy();
     this._element = createDOMElementFromHtml(this.template);
