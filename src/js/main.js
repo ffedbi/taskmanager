@@ -30,7 +30,7 @@ const fillCardWithFilters = (data, section) => {
     filter.render();
     section.appendChild(filter.element);
   }
-};
+}
 
 const filterTasks = (tasks, filterName) => {
   switch (filterName) {
