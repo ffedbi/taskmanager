@@ -231,9 +231,7 @@ export default class TaskEdit extends Component {
 
   destroy() {
     super.destroy();
-    if (this._element) {
-      clearTimeout(this._animationTimeoutId);
-    }
+    clearTimeout(this._animationTimeoutId);
   }
 
   lockToSaving() {
@@ -269,6 +267,10 @@ export default class TaskEdit extends Component {
       this._element.querySelector(`.card__inner`).style.borderColor = `#ff000`;
       const ANIMATION_TIMEOUT = 600;
       this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+      this._animationTimeoutId = setTimeout(() => {
+        this._element.style.animation = ``;
+      }, ANIMATION_TIMEOUT);
     }
   }
 
