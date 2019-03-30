@@ -17,7 +17,6 @@ export default class ModelTask {
       'title': this.title,
       'due_date': this.dueDate,
       'tags': [...this.tags.values()],
-      // TODO как правильно подготвоить изображение к отправке? Пока просто привёл к строке
       'picture': String(this.picture),
       'repeating_days': this.repeatingDays,
       'color': this.color,

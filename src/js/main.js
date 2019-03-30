@@ -105,7 +105,7 @@ const renderTasks = (data) => {
       item.dueDate = newData.dueDate;
       item.picture = newData.picture;
 
-      taskEdit.lockTaskToSaving();
+      taskEdit.lockToSaving();
 
       api.updateTask({id: item.id, data: item.toRAW()})
         .then((response) => {
@@ -121,7 +121,7 @@ const renderTasks = (data) => {
         })
         .then(() => {
           taskEdit.setBorderColorTask(`#000000`);
-          taskEdit.unblockTaskSave();
+          taskEdit.unlockToSave();
           taskEdit.destroy();
         });
     };
@@ -133,15 +133,17 @@ const renderTasks = (data) => {
     };
 
     taskEdit.onDelete = (({id}) => {
-      taskEdit.lockTaskToDeleting();
+      taskEdit.lockToDeleting();
 
       api.deleteTask({id})
         .then(() => api.getTasks())
         .then(renderTasks)
-        .then(() => {
-          taskEdit.unblockTaskDelete();
+        .catch(() => {
+          taskEdit.shake();
         })
-        .catch(alert);
+        .then(() => {
+          taskEdit.unlockToDelete();
+        });
 
       deleteTask(arrTasks, id);
     });

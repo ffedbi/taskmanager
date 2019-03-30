@@ -27,6 +27,7 @@ export default class TaskEdit extends Component {
     this._onSubmit = null;
     this._onKeyEsc = null;
     this._onDelete = null;
+    this._animationTimeoutId = null;
     this._onSubmitBtnClick = this._onSubmitBtnClick.bind(this);
     this._onKeydownEsc = this._onKeydownEsc.bind(this);
     this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
@@ -228,29 +229,32 @@ export default class TaskEdit extends Component {
     this._dueDate = data.dueDate;
   }
 
-  render() {
-    super.render();
+  destroy() {
+    super.destroy();
+    if (this._element) {
+      clearTimeout(this._animationTimeoutId);
+    }
   }
 
-  lockTaskToSaving() {
+  lockToSaving() {
     this._element.querySelector(`.card__save`).disabled = true;
     this._element.querySelector(`.card__save`).textContent = `Saving...`;
     this._element.querySelector(`.card__text`).disabled = true;
   }
 
-  unblockTaskSave() {
+  unlockToSave() {
     this._element.querySelector(`.card__save`).disabled = false;
     this._element.querySelector(`.card__save`).textContent = `Save`;
     this._element.querySelector(`.card__text`).disabled = false;
   }
 
-  lockTaskToDeleting() {
+  lockToDeleting() {
     this._element.querySelector(`.card__delete`).disabled = true;
     this._element.querySelector(`.card__delete`).textContent = `Deleting...`;
     this._element.querySelector(`.card__text`).disabled = true;
   }
 
-  unblockTaskDelete() {
+  unlockToDelete() {
     this._element.querySelector(`.card__delete`).disabled = false;
     this._element.querySelector(`.card__delete`).textContent = `Delete`;
     this._element.querySelector(`.card__text`).disabled = false;
@@ -261,13 +265,11 @@ export default class TaskEdit extends Component {
   }
 
   shake() {
-    this._element.querySelector(`.card__inner`).style.borderColor = `#ff000`;
-    const ANIMATION_TIMEOUT = 600;
-    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
-
-    setTimeout(() => {
-      this._element.style.animation = ``;
-    }, ANIMATION_TIMEOUT);
+    if (this._element) {
+      this._element.querySelector(`.card__inner`).style.borderColor = `#ff000`;
+      const ANIMATION_TIMEOUT = 600;
+      this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+    }
   }
 
   _createHtmlNewHashtag(e) {
@@ -316,7 +318,6 @@ export default class TaskEdit extends Component {
         target.dueDate = taskDate;
       },
       img(value) {
-        // TODO как правильно обработать полученное изображение для отправки?
         target.picture = value;
       },
     };
