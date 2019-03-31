@@ -14,6 +14,7 @@ export default class Task extends Component {
     this._tags = data.tags;
     this._picture = data.picture;
     this._id = data.id;
+    this._isDone = data.isDone;
 
     this._onEdit = null;
     this._onEditButtonClick = this._onEditButtonClick.bind(this);

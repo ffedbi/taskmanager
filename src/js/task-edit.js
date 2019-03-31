@@ -27,9 +27,10 @@ export default class TaskEdit extends Component {
     this._onSubmit = null;
     this._onKeyEsc = null;
     this._onDelete = null;
+    this._animationTimeoutId = null;
     this._onSubmitBtnClick = this._onSubmitBtnClick.bind(this);
     this._onKeydownEsc = this._onKeydownEsc.bind(this);
-    this._onClickBtnDelete = this._onClickBtnDelete.bind(this);
+    this._onDeleteButtonClick = this._onDeleteButtonClick.bind(this);
 
     this._onChangeColorTask = this._onChangeColorTask.bind(this);
     this._onAddedHashtag = this._onAddedHashtag.bind(this);
@@ -109,10 +110,10 @@ export default class TaskEdit extends Component {
     }
   }
 
-  _onClickBtnDelete(e) {
+  _onDeleteButtonClick(e) {
     e.preventDefault();
     if (typeof this._onDelete === `function`) {
-      this._onDelete();
+      this._onDelete({id: this._id});
     }
   }
 
@@ -176,7 +177,7 @@ export default class TaskEdit extends Component {
     if (this._element) {
       this._element.querySelector(`.card__form`).addEventListener(`submit`, this._onSubmitBtnClick);
       document.addEventListener(`keydown`, this._onKeydownEsc);
-      this._element.querySelector(`.card__delete`).addEventListener(`click`, this._onClickBtnDelete);
+      this._element.querySelector(`.card__delete`).addEventListener(`click`, this._onDeleteButtonClick);
 
       this._element.querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, this._onChangeDate);
       this._element.querySelector(`.card__repeat-toggle`).addEventListener(`click`, this._onChangeRepeated);
@@ -207,7 +208,7 @@ export default class TaskEdit extends Component {
     if (this._element) {
       this._element.removeEventListener(`submit`, this._onSubmitBtnClick);
       document.removeEventListener(`keydown`, this._onKeydownEsc);
-      this._element.querySelector(`.card__delete`).removeEventListener(`click`, this._onClickBtnDelete);
+      this._element.querySelector(`.card__delete`).removeEventListener(`click`, this._onDeleteButtonClick);
       flatpickr(this._element.querySelector(`.card__date`)).destroy();
       flatpickr(this._element.querySelector(`.card__time`)).destroy();
 
@@ -226,6 +227,51 @@ export default class TaskEdit extends Component {
     this._color = data.color;
     this._repeatingDays = data.repeatingDays;
     this._dueDate = data.dueDate;
+  }
+
+  destroy() {
+    super.destroy();
+    clearTimeout(this._animationTimeoutId);
+  }
+
+  lockToSaving() {
+    this._element.querySelector(`.card__save`).disabled = true;
+    this._element.querySelector(`.card__save`).textContent = `Saving...`;
+    this._element.querySelector(`.card__text`).disabled = true;
+  }
+
+  unlockToSave() {
+    this._element.querySelector(`.card__save`).disabled = false;
+    this._element.querySelector(`.card__save`).textContent = `Save`;
+    this._element.querySelector(`.card__text`).disabled = false;
+  }
+
+  lockToDeleting() {
+    this._element.querySelector(`.card__delete`).disabled = true;
+    this._element.querySelector(`.card__delete`).textContent = `Deleting...`;
+    this._element.querySelector(`.card__text`).disabled = true;
+  }
+
+  unlockToDelete() {
+    this._element.querySelector(`.card__delete`).disabled = false;
+    this._element.querySelector(`.card__delete`).textContent = `Delete`;
+    this._element.querySelector(`.card__text`).disabled = false;
+  }
+
+  setBorderColorTask(color) {
+    this._element.querySelector(`.card__inner`).style.borderColor = color;
+  }
+
+  shake() {
+    if (this._element) {
+      this._element.querySelector(`.card__inner`).style.borderColor = `#ff000`;
+      const ANIMATION_TIMEOUT = 600;
+      this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+      this._animationTimeoutId = setTimeout(() => {
+        this._element.style.animation = ``;
+      }, ANIMATION_TIMEOUT);
+    }
   }
 
   _createHtmlNewHashtag(e) {
@@ -274,7 +320,6 @@ export default class TaskEdit extends Component {
         target.dueDate = taskDate;
       },
       img(value) {
-        /* !!! */
         target.picture = value;
       },
     };
@@ -302,7 +347,7 @@ export default class TaskEdit extends Component {
       str += `<input class="visually-hidden card__repeat-day-input" type="checkbox" id="repeat-${item}-${this._id}" name="repeat" value="${item}" ${this._repeatingDays[item] && ` checked`}/>
       <label class="card__repeat-day" for="repeat-${item}-${this._id}">${item}</label>`.trim();
     });
-    
+
     return str;
   }
 
@@ -370,7 +415,7 @@ export default class TaskEdit extends Component {
         </div>
 
         <label class="card__img-wrap ${this._picture ? `` : ` card__img-wrap--empty`}">
-          <input type="file" class="card__img-input visually-hidden" name="img"/>
+          <input type="file" class="card__img-input visually-hidden" name="img" accept="image/jpeg,image/png,image/jpg"/>
           <img src="${this._picture ? this._picture : ``}" alt="task picture"class="card__img"/>
         </label>
 
