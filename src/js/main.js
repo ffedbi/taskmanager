@@ -6,6 +6,8 @@ import Filter from "./filter";
 import {statInit} from "./statistics";
 import moment from 'moment';
 import API from "./api";
+import Provider from "./provider";
+import Store from "./store";
 
 const FILTER_BLOCK = document.querySelector(`.main__filter`);
 const TASK_BLOCK = document.querySelector(`.board__tasks`);
@@ -15,8 +17,11 @@ const STATISTIC = document.querySelector(`.statistic`);
 const BUTTON_TASKS = document.querySelector(`#control__task`);
 
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const TASK_STORE_KEY = `tasks-store-key`;
 const END_POINT = `https://es8-demo-srv.appspot.com/task-manager`;
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+const store = new Store({key: TASK_STORE_KEY, storage: localStorage});
+const provider = new Provider({api, store});
 let arrTasks = null;
 
 const deleteTask = (tasks, id) => {
@@ -29,11 +34,20 @@ const LoadingMsg = {
   error: `Something went wrong while loading your tasks. Check your connection or try again later`,
 };
 
+window.addEventListener(`offline`, () => {
+  document.title = `${document.title}[OFFLINE]`;
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.split(`[OFFLINE]`)[0];
+  provider.syncTasks();
+});
+
 const BLOCK_MASSAGE = document.querySelector(`.board__no-tasks`);
 BLOCK_MASSAGE.classList.remove(`visually-hidden`);
 BLOCK_MASSAGE.textContent = LoadingMsg.loading;
 
-api.getTasks()
+provider.getTasks()
   .then((tasks) => {
     arrTasks = tasks;
     renderTasks(tasks, TASK_BLOCK);
@@ -107,7 +121,7 @@ const renderTasks = (data) => {
 
       taskEdit.lockToSaving();
 
-      api.updateTask({id: item.id, data: item.toRAW()})
+      provider.updateTask({id: item.id, data: item.toRAW()})
         .then((response) => {
           if (response) {
             task.update(response);
@@ -135,7 +149,7 @@ const renderTasks = (data) => {
     taskEdit.onDelete = (({id}) => {
       taskEdit.lockToDeleting();
 
-      api.deleteTask({id})
+      provider.deleteTask({id})
         .then(() => api.getTasks())
         .then(renderTasks)
         .catch(() => {

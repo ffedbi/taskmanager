@@ -69,4 +69,14 @@ export default class API {
         throw err;
       });
   }
+
+  syncTasks({tasks}) {
+    return this._load({
+      url: `tasks/sync`,
+      method: `POST`,
+      body: JSON.stringify(tasks),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then(toJSON);
+  }
 }
