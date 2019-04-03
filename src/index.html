@@ -147,5 +147,11 @@
         <button class="load-more" type="button">load more</button>
       </section>
     </main>
+    <script>
+      navigator.serviceWorker.register(`./sw.js`)
+        .catch((err) => {
+          throw err;
+        });
+    </script>
   </body>
 </html>

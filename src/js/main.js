@@ -15,6 +15,8 @@ const BUTTON_STATISTIC = document.querySelector(`#control__statistic`);
 const SECTIONS_TASK = document.querySelector(`.board`);
 const STATISTIC = document.querySelector(`.statistic`);
 const BUTTON_TASKS = document.querySelector(`#control__task`);
+const BUTTON_NEW_TASK = document.querySelector(`#control__new-task`);
+let isNewTask = false;
 
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const TASK_STORE_KEY = `tasks-store-key`;
@@ -181,3 +183,10 @@ const onClickBtnTasks = () => {
 fillCardWithFilters(FILTER_DATA, FILTER_BLOCK);
 BUTTON_STATISTIC.addEventListener(`click`, onClickBtnStatistics);
 BUTTON_TASKS.addEventListener(`click`, onClickBtnTasks);
+
+BUTTON_NEW_TASK.addEventListener(`click`, function () {
+  if (!isNewTask) {
+    isNewTask = true;
+    window.console.log(`new task`);
+  }
+});

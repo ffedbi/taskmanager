@@ -13,7 +13,7 @@ export default class Provider {
   }
 
   getTasks() {
-    if (this._isOnline()) {
+    if (Provider._isOnline()) {
       return this._api.getTasks()
         .then((tasks) => {
           tasks.map((item) => this._store.setItem({key: item.id, item: item.toRAW()}));
@@ -23,14 +23,12 @@ export default class Provider {
       const rawTasksMap = this._store.getAll();
       const rawTasks = objectToArray(rawTasksMap);
       const tasks = ModelTask.parseTasks(rawTasks);
-
       return Promise.resolve(tasks);
     }
-
   }
 
   createTask({task}) {
-    if (this._isOnline()) {
+    if (Provider._isOnline()) {
       return this._api.createTask({task})
         .then(() => {
           this._store.setItem({key: task.id, item: task.toRAW()});
@@ -39,14 +37,13 @@ export default class Provider {
     } else {
       task.id = this._generateId();
       this._needSync = true;
-
       this._store.setItem({key: task.id, item: task});
       return Promise.resolve(ModelTask.parseTask(task));
     }
   }
 
   updateTask({id, data}) {
-    if (this._isOnline()) {
+    if (Provider._isOnline()) {
       return this._api.updateTask({id, data})
         .then((task) => {
           this._store.setItem({key: task.id, item: task.toRAW()});
@@ -61,7 +58,7 @@ export default class Provider {
   }
 
   deleteTask({id}) {
-    if (this._isOnline()) {
+    if (Provider._isOnline()) {
       return this._api.deleteTask({id})
         .then(() => {
           this._store.removeItem({key: id});
