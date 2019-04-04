@@ -12,8 +12,12 @@ self.addEventListener(`install`, (evt) => {
         `./`,
         `./index.html`,
         `./js/bundle.js`,
-        `./css/`,
-        `./img/`,
+        `./css/normalize.css`,
+        `./css/style.css`,
+        `./img/add-photo.svg`,
+        `./img/close.svg`,
+        `./img/sample-img.jpg`,
+        `./img/wave.svg`,
       ]);
     });
 
